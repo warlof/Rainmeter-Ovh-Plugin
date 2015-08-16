@@ -83,41 +83,9 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ovhKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ovh.RestLib">
-      <HintPath>..\..\..\Ovh.RestLib-master\Ovh.RestLib\bin\Release\Ovh.RestLib.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\..\..\Ovh.RestLib-master\Ovh.RestLib\bin\Release\RestSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Models\ComplexeTypeUnitAndValue.cs" />
-    <Compile Include="Models\Dedicated\Dedicated.cs" />
-    <Compile Include="Models\Dedicated\DedicatedServerRtmLoad.cs" />
-    <Compile Include="Models\Dedicated\HardwareSpecifications.cs" />
-    <Compile Include="Models\Dedicated\HardwareSpecificationsDisk.cs" />
-    <Compile Include="Models\MrtgTimestampValue.cs" />
-    <Compile Include="Models\Vps\Vps.cs" />
-    <Compile Include="Models\Vps\Model.cs" />
-    <Compile Include="PluginOVH.cs" />
-    <Compile Include="$(SolutionDir)..\API\RainmeterAPI.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ovhKey.snk" />
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
