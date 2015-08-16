@@ -211,6 +211,10 @@ namespace PluginOVH
         {
             // build the plugin config file path
             string pluginConfigFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Rainmeter", "Plugins", "ovhPluginConfig.xml");
+            XDocument config;
+            XElement configNode;
+            XElement providerNode;
+            XElement applicationNode;
 
             if (!this._applicationKey.Equals("") && !this._applicationSecret.Equals(""))
             {
@@ -234,38 +238,49 @@ namespace PluginOVH
                     }
 
                     // check if the config file exists
-                    if (File.Exists(pluginConfigFile))
-                    {
+                    if (File.Exists(pluginConfigFile)) {
                         // The config file exists, search for the current measureName config value
-                        XDocument configFile = XDocument.Load(pluginConfigFile);
-                        XElement measureConsumerKey = configFile.Element("config").Element(this._provider.ToString()).Element(this._applicationKey);
+                        config = XDocument.Load(pluginConfigFile);
+                        configNode = config.Element("config");
 
-                        // A config value has been found, load it in memory
-                        if (measureConsumerKey != null)
-                        {
-                            this._ovhApi.ConsumerKey = measureConsumerKey.Value;
-                            this._consumerKeyActivated = true;
-                        }
-                        // Unable to found a config value, call the API for a new one
-                        else
-                        {
-                            // generate a new one and start the credential validation page in the default user browser
-                            Process.Start(this._ovhApi.RequestConsumerKey());
-                            // and store it inside config file and store the keys
-                            if (configFile.Element("config").Element(this._provider.ToString()) != null)
-                            {
-                                configFile.Element("config").Element(this._provider.ToString()).Add(new XElement(this._applicationKey, this._ovhApi.ConsumerKey));
-                            } else
-                            {
-                                configFile.Element("config").Add(new XElement(this._provider.ToString(), new XElement(this._applicationKey, this._ovhApi.ConsumerKey)));
+                        if (configNode != null) {
+                            providerNode = configNode.Element(this._provider.ToString());
+                            // A provider node has been found, continue the exploration
+                            if (providerNode != null) {
+                                applicationNode = config.Element("config").Element(this._provider.ToString()).Element(this._applicationKey);
+
+                                // A config value has been found, load it in memory
+                                if (applicationNode != null) {
+                                    this._ovhApi.ConsumerKey = applicationNode.Value;
+                                    this._consumerKeyActivated = true;
+                                }
+
+                            // No provider node found, creating it and generate further nodes
+                            } else {
+                                // launch credential validation page in the user browser
+                                Process.Start(this._ovhApi.RequestConsumerKey());
+                                // create a new application node with the generated consumer key
+                                applicationNode = new XElement(this._applicationKey, this._ovhApi.ConsumerKey);
+                                // append it to the provider node
+                                providerNode = new XElement(this._provider.ToString(), applicationNode);
+                                // append it to the root config node
+                                config.Element("config").Add(providerNode);
+                                config.Save(pluginConfigFile);
                             }
-                            
-                            configFile.Save(pluginConfigFile);
+                            // No config node found, creating it and generate further nodes
+                        } else {
+                            // launch credential validation page in the user browser
+                            Process.Start(this._ovhApi.RequestConsumerKey());
+                            // create a new application node with the generated consumer key
+                            applicationNode = new XElement(this._applicationKey, this._ovhApi.ConsumerKey);
+                            // append it to the provider node
+                            providerNode = new XElement(this._provider.ToString(), applicationNode);
+                            // append it to the root config node
+                            configNode = new XElement("config", providerNode);
+                            config.Add(configNode);
+                            config.Save(pluginConfigFile);
                         }
-
-                    }
-                    else
-                    {
+                    } else {
                         // generate a new one and start the credential validation page in the default user browser
                         Process.Start(this._ovhApi.RequestConsumerKey());
                         // generate config file and store the keys
