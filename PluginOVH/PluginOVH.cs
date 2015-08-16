@@ -517,10 +517,8 @@ namespace PluginOVH
             try
             {
                 List<MrtgTimestampValue> upload = this._ovhApi.Get<List<MrtgTimestampValue>>(String.Format("dedicated/server/{0}/mrtg?period=hourly&type={1}", this._serverName, type));
-                if (upload.Count > 0)
+                if (upload != null && upload.Count > 0)
                     return upload[upload.Count-1].value.value;
-                else
-                    return 0.0;
             }
             catch (AggregateException e)
             {
@@ -535,7 +533,8 @@ namespace PluginOVH
             try
             {
                 ComplexeTypeUnitAndValue<double> upload = this._ovhApi.Get<ComplexeTypeUnitAndValue<double>>(String.Format("vps/{0}/use?type={1}", this._serverName, type));
-                return upload.value;
+                if (upload != null)
+                    return upload.value;
             }
             catch (AggregateException e)
             {
