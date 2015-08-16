@@ -1,6 +1,8 @@
 # Rainmeter Ovh Plugin
 A rainmeter plugin using OVH and Kimsufi API in order to get few servers/vps informations.
 
+![skin sample](http://i.imgur.com/1JKMRjt.png)
+
 ## Disclaimer
 This plugin is still in eavy developpment and not stable.
 In order to test it, you need to put Newtonsoft.Json, Ovh.RestLib and RestSharp DLLs inside your rainmeter installation folder.
