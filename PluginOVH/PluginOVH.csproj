@@ -103,6 +103,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Core\Helper.cs" />
+    <Compile Include="Measures\AbstractMeasure.cs" />
+    <Compile Include="Measures\DedicatedMeasure.cs" />
+    <Compile Include="Measures\VpsMeasure.cs" />
     <Compile Include="Models\ComplexeTypeUnitAndValue.cs" />
     <Compile Include="Models\Dedicated\Dedicated.cs" />
     <Compile Include="Models\Dedicated\DedicatedServerRtmLoad.cs" />
@@ -113,11 +117,15 @@
     <Compile Include="Models\Vps\Model.cs" />
     <Compile Include="PluginOVH.cs" />
     <Compile Include="$(SolutionDir)..\API\RainmeterAPI.cs" />
+    <Compile Include="Singleton\StaticDedicatedMeasure.cs" />
+    <Compile Include="Singleton\AbstractStaticMeasure.cs" />
+    <Compile Include="Singleton\StaticVpsMeasure.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ovhKey.snk" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
