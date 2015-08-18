@@ -17,7 +17,9 @@ namespace PluginOVH.Measures
             try
             {
                 // get used cpu
-                return this._data.getOvh().Get<ComplexeTypeUnitAndValue<double>>(String.Format("vps/{0}/use?type={1}", this._data.getServerName(), useType)).value;
+                ComplexeTypeUnitAndValue<double> ressource = this._data.getOvh().Get<ComplexeTypeUnitAndValue<double>>(String.Format("vps/{0}/use?type={1}", this._data.getServerName(), useType));
+                if (ressource != null)
+                    return ressource.value;
             }
             catch (AggregateException e)
             {
@@ -130,6 +132,11 @@ namespace PluginOVH.Measures
         protected override double getDownload()
         {
             return this.getVpsUse("net:rx");
+        }
+
+        ~VpsMeasure()
+        {
+            this._data.disposeMeasure(this._data.getServerName());
         }
     }
 }

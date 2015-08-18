@@ -42,7 +42,10 @@ namespace PluginOVH
         public static StaticDedicatedMeasure instance(string serverName, API api)
         {
             if (StaticDedicatedMeasure._instances.ContainsKey(serverName))
+            {
+                StaticDedicatedMeasure._instances[serverName]._measuresHandled++;
                 return StaticDedicatedMeasure._instances[serverName];
+            }
             
             return new StaticDedicatedMeasure(api, serverName);
         }
@@ -79,6 +82,16 @@ namespace PluginOVH
                 this._ips =  this._ovhApi.Get<List<string>>(String.Format("dedicated/server/{0}/ips", this._serverName));
             } catch (AggregateException e) {
                 API.Log(API.LogType.Error, e.InnerException.Message);
+            }
+        }
+
+        public override void disposeMeasure(string serverName)
+        {
+            this._measuresHandled--;
+            if (this._measuresHandled == 0)
+            {
+                StaticDedicatedMeasure._instances.Remove(serverName);
+                GC.SuppressFinalize(this);
             }
         }
 

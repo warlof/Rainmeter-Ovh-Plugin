@@ -30,7 +30,10 @@ namespace PluginOVH
         public static StaticVpsMeasure instance(string serverName, API api)
         {
             if (StaticVpsMeasure._instances.ContainsKey(serverName))
+            {
+                StaticVpsMeasure._instances[serverName]._measuresHandled++;
                 return StaticVpsMeasure._instances[serverName];
+            }
 
             return new StaticVpsMeasure(api, serverName);
         }
@@ -46,6 +49,16 @@ namespace PluginOVH
                 this._ips = this._ovhApi.Get<List<string>>(String.Format("vps/{0}/ips", this._serverName));
             } catch (AggregateException e) {
                 API.Log(API.LogType.Error, e.InnerException.Message);
+            }
+        }
+
+        public override void disposeMeasure(string serverName)
+        {
+            this._measuresHandled--;
+            if (this._measuresHandled == 0)
+            {
+                StaticVpsMeasure._instances.Remove(serverName);
+                GC.SuppressFinalize(this);
             }
         }
     }

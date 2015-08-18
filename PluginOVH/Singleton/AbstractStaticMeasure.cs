@@ -20,13 +20,14 @@ namespace PluginOVH
             KimsufiCA,
             KimsufiEU
         }
-
+        
         private string _consumerKey;
         private string _appKey;
         private string _appSecret;
         private Provider _provider;
         private bool _enableKey;
 
+        protected int _measuresHandled;
         protected OvhApi _ovhApi;
         protected string _serverName;
         protected List<string> _ips;
@@ -58,6 +59,7 @@ namespace PluginOVH
             #endregion
 
             this._serverName = serverName;
+            this._measuresHandled = 1;
 
             this.loadConsumerKey();
 
@@ -193,5 +195,7 @@ namespace PluginOVH
         {
             return this._serverName;
         }
+
+        public abstract void disposeMeasure(string serverName);
     }
 }

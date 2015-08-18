@@ -140,5 +140,10 @@ namespace PluginOVH.Measures
         {
             return this.getTraffic("traffic:upload");
         }
+
+        ~DedicatedMeasure()
+        {
+            this._data.disposeMeasure(this._data.getServerName());
+        }
     }
 }

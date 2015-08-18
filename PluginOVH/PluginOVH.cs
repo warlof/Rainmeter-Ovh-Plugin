@@ -82,71 +82,34 @@ namespace PluginOVH
         [DllExport]
         public static void Reload(IntPtr data, IntPtr rm, ref double maxValue)
         {
-            switch (service)
-            {
-                case Service.Dedicated:
-                    DedicatedMeasure dedicatedMeasure = (DedicatedMeasure)GCHandle.FromIntPtr(data).Target;
-                    dedicatedMeasure.Reload(new API(rm), ref maxValue);
-                    break;
-                default:
-                    VpsMeasure vpsMeasure = (VpsMeasure)GCHandle.FromIntPtr(data).Target;
-                    vpsMeasure.Reload(new API(rm), ref maxValue);
-                    break;
-            }
+            AbstractMeasure measure = (AbstractMeasure)GCHandle.FromIntPtr(data).Target;
+            measure.Reload(new API(rm), ref maxValue);
         }
 
         [DllExport]
         public static double Update(IntPtr data)
         {
-            switch (service)
-            {
-                case Service.Dedicated:
-                    DedicatedMeasure dedicatedMeasure = (DedicatedMeasure)GCHandle.FromIntPtr(data).Target;
-                    return dedicatedMeasure.Update();
-                default:
-                    VpsMeasure vpsMeasure = (VpsMeasure)GCHandle.FromIntPtr(data).Target;
-                    return vpsMeasure.Update();
-            }
+            AbstractMeasure measure = (AbstractMeasure)GCHandle.FromIntPtr(data).Target;
+            return measure.Update();
         }
         
         [DllExport]
         public static IntPtr GetString(IntPtr data)
         {
-            string stringValue;
-
-            switch (service)
+            AbstractMeasure measure = (AbstractMeasure)GCHandle.FromIntPtr(data).Target;
+            if (StringBuffer != IntPtr.Zero)
             {
-                case Service.Dedicated:
-                    DedicatedMeasure dedicatedMeasure = (DedicatedMeasure)GCHandle.FromIntPtr(data).Target;
-                    if (StringBuffer != IntPtr.Zero)
-                    {
-                        Marshal.FreeHGlobal(StringBuffer);
-                        StringBuffer = IntPtr.Zero;
-                    }
-
-                    stringValue = dedicatedMeasure.GetString();
-                    if (stringValue != null)
-                    {
-                        StringBuffer = Marshal.StringToHGlobalUni(stringValue);
-                    }
-
-                    return StringBuffer;
-                default:
-                    VpsMeasure vpsMeasure = (VpsMeasure)GCHandle.FromIntPtr(data).Target;
-                    if (StringBuffer != IntPtr.Zero)
-                    {
-                        Marshal.FreeHGlobal(StringBuffer);
-                        StringBuffer = IntPtr.Zero;
-                    }
-
-                    stringValue = vpsMeasure.GetString();
-                    if (stringValue != null)
-                    {
-                        StringBuffer = Marshal.StringToHGlobalUni(stringValue);
-                    }
-
-                    return StringBuffer;
+                Marshal.FreeHGlobal(StringBuffer);
+                StringBuffer = IntPtr.Zero;
             }
+
+            string stringValue = measure.GetString();
+            if (stringValue != null)
+            {
+                StringBuffer = Marshal.StringToHGlobalUni(stringValue);
+            }
+
+            return StringBuffer;
         }
 
 #if DLLEXPORT_EXECUTEBANG
