@@ -133,7 +133,9 @@ namespace PluginOVH.Measures
 
         protected override string getReverseName()
         {
-            return this._data.getInfo().reverse;
+            if (this._data.getInfo() != null)
+                return this._data.getInfo().reverse;
+            return null;
         }
         
         protected override double getUpload()
