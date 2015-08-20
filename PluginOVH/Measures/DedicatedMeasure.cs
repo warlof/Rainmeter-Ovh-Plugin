@@ -128,7 +128,9 @@ namespace PluginOVH.Measures
 
         protected override double getRamSize()
         {
-            return this._data.getHardwareSpecs().memorySize.value;
+            if (this._data.getHardwareSpecs() != null)
+                return this._data.getHardwareSpecs().memorySize.value;
+            return 0.0;
         }
 
         protected override string getReverseName()
